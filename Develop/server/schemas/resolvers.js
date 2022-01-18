@@ -1,4 +1,4 @@
-const {AuthenicationError, AuthenticationError} = require ("apollo-server-express");
+const { AuthenticationError} = require ("apollo-server-express");
 
 const {User} = require ('../models');
 const {signToken} =require ('../utils/auth');
@@ -15,13 +15,10 @@ const resolvers = {
 },
 
 Mutation: {
-    signUp: async (parent, {email, username, password}) =>{
-        const user = await User.create({email, username, password});
+    signUp: async (parent, {username,email,password}) =>{
+        const user = await User.create({username, email, password});
 
-    if (!user) {
-      return null;
-    }
-    const token = signToken(user);
+        const token = signToken(user);
     return { token, user };
     },
 
@@ -29,44 +26,46 @@ Mutation: {
         const user = await User.findOne({ email });
 
         if (!user) {
-          return null;
+          throw new AuthenticationError("Not Authorised");
         }
     
         const correctPw = await user.isCorrectPassword(password);
     
         if (!correctPw) {
-          return null;
+          throw new AuthenticationError("Password Incorrect")
         }
         const token = signToken(user);
+        return{token, user}
         
     },
 
-    saveBook: async (parent, {bookData}, {user}) => {
-        try {
+    saveBook: async (parent, {bookData}, context) => {
+        if (context.user) {
             const updatedUser = await User.findOneAndUpdate(
-              { _id: user._id },
-              { $push: { savedBooks: bodyData } },
+              { _id: context.user._id },
+              { $push: { savedBooks: bookData } },
               { new: true }
             );
-            return res.json(updatedUser);
-          } catch (err) {
-            return null
+            return updatedUser;
+          
             }
-        }
-    },
+            throw new AuthenticationError("Not Authorised") 
+        },
 
-    deleteBook: async(parent, {bookId}, {user}) => {
-        try{
-            return await User.findOneAndUpdate(
-                {_id: user._id},
+    deleteBook: async(parent, {bookId}, context) => {
+      console.log ("here")
+      console.log ("bookId")
+        if(context.user) {
+          
+            const updatedUser=await User.findOneAndUpdate(
+                {_id: context.user._id},
                 {$pull: {savedBooks: {bookId}}},
                 {new:true}
             );
-
-        } catch (error){
-            return null
-
-        }
+            return updatedUser
+            }
+            throw new AuthenticationError("Not Authorised")
     },
-  };
+  },
+};
   module.exports = resolvers;
