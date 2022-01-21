@@ -1,3 +1,11 @@
+
+//Emmanuel HELP TO COMPLETE TODAY
+//Change develop folder
+//Go through client side folders
+//Loginform/signup form
+//deploy on heroku
+
+
 const express = require('express')
 const {ApolloServer} = require('apollo-server-express')
 const path = require('path')
