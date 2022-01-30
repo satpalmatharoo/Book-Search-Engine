@@ -13,9 +13,7 @@ import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
 
-const httpLink = createHttpLink({
-  uri:"graphql"
-})
+
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
@@ -30,19 +28,27 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
-})
 
 function App() {
+  const httpLink = new createHttpLink({
+    url:"/graphql"
+  })
+  
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+  });
+
   return (<ApolloProvider client = {client}>
     <Router>
       <>
         <Navbar />
         <Switch>
-          <Route exact path='/' component={SearchBooks} />
-          <Route exact path='/saved' component={SavedBooks} />
+
+          <Route exact path="/" />
+          <SearchBooks />
+          <Route exact path="/saved"/>
+          <SavedBooks/>
           <Route render={() => <h1 className='display-2'>Wrong page!</h1>} />
         </Switch>
       </>
@@ -50,5 +56,7 @@ function App() {
     </ApolloProvider>
   );
 }
+
+
 
 export default App;
