@@ -28,26 +28,26 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
 
 function App() {
   const httpLink = new createHttpLink({
     url:"/graphql"
   })
   
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
-  });
-
+  
   return (<ApolloProvider client = {client}>
     <Router>
       <>
         <Navbar />
         <Switch>
 
-          <Route exact path="/" />
-          <SearchBooks />
-          <Route exact path="/saved"/>
+          <Route exact path="/" component = {SearchBooks} />
+          /* <SearchBooks />
+          <Route exact path="/saved" component ={SavedBooks}/>
           <SavedBooks/>
           <Route render={() => <h1 className='display-2'>Wrong page!</h1>} />
         </Switch>
