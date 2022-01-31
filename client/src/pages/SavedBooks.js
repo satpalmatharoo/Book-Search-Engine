@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Jumbotron, Container, CardColumns, Card, Button} from "react-bootstrap";
-// have a look at greyed out 
+
 import { useMutation } from "@apollo/client";
 
 import Auth from "../utils/auth";
