@@ -9,12 +9,7 @@
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build"
   },
-  "proxy": {
-    "/api": {
-      "target": "http://0.0.0.0:3001",
-      "secure": false
-    }
-  },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",
