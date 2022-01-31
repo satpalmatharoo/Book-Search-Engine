@@ -15,8 +15,11 @@ const resolvers = {
 },
 
 Mutation: {
-    signUp: async (parent, {username,email,password}) =>{
-        const user = await User.create({username, email, password});
+    addUser: async (parent, args) =>{
+      console.log("username reached here");
+      console.log(email);
+      console.log(password);
+        const user = await User.create(args);
 
         const token = signToken(user);
     return { token, user };
@@ -52,7 +55,7 @@ Mutation: {
             throw new AuthenticationError("Not Authorised") 
         },
 
-    deleteBook: async(parent, {bookId}, context) => {
+    removeBook: async(parent, {bookId}, context) => {
       console.log ("here")
       console.log ("bookId")
         if(context.user) {
