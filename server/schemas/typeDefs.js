@@ -16,29 +16,28 @@ type Book {
         image: String
         link: String
         title: String!
+}
   
-    }
-  
-    type Login { 
+type Login { 
         user: User
         token: ID!
         
-    }
-    input BookContent {
+}
+input BookContent {
         authors: [String]
         description: String!
         bookId: String!
         image: String
         link: String
         title: String!
-    }
+}
     
-    type Query {
+type Query {
         me: User
     }
 
     
-    type Mutation {
+type Mutation {
         login(email: String!, password: String!) : Login
         saveBook(bookData: BookContent!) : User
         removeBook(bookId:ID!) : User
