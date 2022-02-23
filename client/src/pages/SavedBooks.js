@@ -5,13 +5,13 @@ import { useMutation } from "@apollo/client";
 
 import Auth from "../utils/auth";
 import { removeBookId, saveBookIds } from "../utils/localStorage";
-import { GET_ME } from "../utils/queries";
+import { QUERY_ME } from "../utils/queries";
 import { REMOVE_BOOK } from "../utils/mutation";
 import { useQuery } from "@apollo/react-hooks";
 
 const SavedBooks = () => {
-  const { loading, data } = useQuery(GET_ME);
-  const userData = data?.me || [];
+  const { loading, data } = useQuery(QUERY_ME);
+  const userData = data?.me || {};
 
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
@@ -21,13 +21,10 @@ const SavedBooks = () => {
       return false;
     }
     try {
-      const response = await removeBook({
+      const {data} = await removeBook({
         variables: { bookId },
       });
 
-      if (!response) {
-        throw new Error("something went wrong!");
-      }
       removeBookId(bookId);
     } catch (err) {
       console.error(error);
@@ -40,11 +37,11 @@ const SavedBooks = () => {
   }
 
   // sync localStorage with what was returned from the userData query
-  const savedBookIds = userData.savedBooks.map((book) => book.bookId);
-  saveBookIds(savedBookIds);
+  
 
   return (
     <>
+    {console.log (userData)}
       <Jumbotron fluid className="text-light bg-dark">
         <Container>
           <h1>Viewing saved books!</h1>
@@ -52,14 +49,14 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+        {userData.savedBooks?.length
             ? `Viewing ${userData.savedBooks.length} saved ${
-                userData.savedBooks.length === 1 ? "book" : "books"
+                userData.savedBooks.length === 1 ? 'book' : 'books'
               }:`
-            : "You have no saved books!"}
+            : 'You have no saved books!'}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks?.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
                 {book.image ? (
